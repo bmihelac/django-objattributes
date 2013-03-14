@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_label|capfirst|escape }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'change' original.pk %}">{{ original|truncatewords:"18" }}</a>
+&rsaquo; {{ attribute_model_title }}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<form action="." method="POST">{% csrf_token %}
+  {% csrf_token %}
+
+  {% for form in formset %}
+    <h3>{{ form.attribute }}</h3>
+    {{ form.as_p }}
+  {% endfor %}
+
+  <div class="submit-row">
+    <input type="submit" class="default" value="{% trans "Submit" %}">
+  </div>
+</form>
+
+{% endblock %}

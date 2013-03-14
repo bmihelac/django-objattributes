@@ -1,0 +1,22 @@
+{% load lists_tags %}
+
+{% block header %}
+<p>
+<a href="/">Home</a>
+</p>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+  <h3>Folders</h3>
+  {% lists_get_folders request as folders %}
+  <ul>
+  {% for object in folders %}
+  <li><a href="{{ object.get_absolute_url }}">{{ object }}</a> ({{ object.item_set.count }} items)</li>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}

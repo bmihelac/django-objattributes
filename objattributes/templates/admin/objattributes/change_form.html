@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+{% load admin_urls %}
+
+{% block object-tools-items %}
+  {% for title, url in attribute_models %}
+  <li><a href="{{ url }}" class="objattributes_edit">{% blocktrans %}Edit {{title}}{% endblocktrans %}</a></li>
+  {% endfor %}
+  {{ block.super }}
+{% endblock %}
