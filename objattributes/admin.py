@@ -55,16 +55,20 @@ class AttributeEditMixin(object):
         return super(AttributeEditMixin, self).change_view(request,
                 object_id, form_url='', extra_context=extra_context)
 
+    def get_objattributes_form_class(self, object_attribute_model, attribute):
+            return modelform_factory(object_attribute_model,
+                    exclude=['content_type', 'object_id', 'attribute'])
+
     def edit_attributes(self, request, object_id, app_label, model,
             *args, **kwargs):
         obj = self.get_object(request, object_id)
 
         object_attribute = ContentType.objects.get(app_label=app_label,
                 model=model)
-        object_attribute_model_class = object_attribute.model_class()
-        assert object_attribute_model_class in self.attribute_models
+        object_attribute_model = object_attribute.model_class()
+        assert object_attribute_model in self.attribute_models
 
-        attribute_model_class = object_attribute_model_class.attribute.field.rel.to
+        attribute_model_class = object_attribute_model.attribute.field.rel.to
 
         data = request.POST if request.method == "POST" else None
 
@@ -72,8 +76,11 @@ class AttributeEditMixin(object):
         for attribute in attribute_model_class.objects.all():
             prefix = attribute.pk
             instance = attribute.get_object_attribute(obj)
-            ObjectAttributeForm = modelform_factory(object_attribute_model_class,
-                    exclude=['content_type', 'object_id', 'attribute'])
+
+            ObjectAttributeForm = self.get_objattributes_form_class(
+                    object_attribute_model,
+                    attribute)
+
             form = ObjectAttributeForm(data,
                     prefix=prefix,
                     instance=instance)
@@ -99,8 +106,8 @@ class AttributeEditMixin(object):
         context = {
             'original': obj,
             'opts': self.model._meta,
-            'attribute_model_title': object_attribute_model_class._meta.verbose_name_plural,
-            'title': object_attribute_model_class._meta.verbose_name_plural,
+            'attribute_model_title': object_attribute_model._meta.verbose_name_plural,
+            'title': object_attribute_model._meta.verbose_name_plural,
             'formset': formset,
             }
         return TemplateResponse(request, [self.edit_attributes_template],
