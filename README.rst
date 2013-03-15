@@ -8,6 +8,4 @@ objects. It includes admin integration for editing object attributes.
 TODO:
 -----
 
-* work on edit template
-
 * translations 
