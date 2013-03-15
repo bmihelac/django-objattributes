@@ -14,7 +14,8 @@ class Attribute(BaseAttribute):
 
 class ObjectAttribute(BaseObjectAttribute):
     attribute = models.ForeignKey(Attribute,
-            verbose_name=_('Attribute'))
+            verbose_name=_('Attribute'),
+            related_name="object_attributes")
     value = models.TextField(_('Value'), max_length=250)
 
     def set_value(self, value):
@@ -26,5 +27,4 @@ class ObjectAttribute(BaseObjectAttribute):
 
 class Tshirt(models.Model):
     name = models.CharField(max_length=100)
-
     attributes = GenericRelation(ObjectAttribute)

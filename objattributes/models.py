@@ -5,6 +5,9 @@ from django.contrib.contenttypes import generic
 
 
 class BaseAttribute(models.Model):
+    """
+    Abstract attribute model.
+    """
 
     class Meta:
         abstract = True
@@ -14,7 +17,7 @@ class BaseAttribute(models.Model):
         Returns existing object attribute or initialize new
         if it does not exits.
         """
-        ObjectAttribute = self.objectattribute_set.model
+        ObjectAttribute = self.object_attributes.model
         try:
             object_attribute = ObjectAttribute.objects.get(
                     content_type=ContentType.objects.get_for_model(obj),
@@ -39,7 +42,11 @@ class BaseAttribute(models.Model):
 
 class BaseObjectAttribute(models.Model):
     """
-    Maps objects and attributes.
+    Abstract model maps objects and attributes with their values.
+
+    Concrete implementation should have foreign key
+    to ``BaseAttribute`` subclass, with related_name set to
+    ``object_attributes``.
     """
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
