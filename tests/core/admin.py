@@ -28,7 +28,7 @@ class BookAdmin(AttributeEditMixin, admin.ModelAdmin):
                     form=ObjectAttributeModelForm,
                     fields=fields)
         return super(BookAdmin, self).get_objattributes_form_class(
-                object_attribute_model, attribute)
+                type(object_attribute), attribute)
 
 admin.site.register(Attribute)
 admin.site.register(Tshirt, TshirtAdmin)
