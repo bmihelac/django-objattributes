@@ -2,6 +2,13 @@
 {% load url from future %}
 {% load i18n %}
 {% load admin_urls %}
+{% load admin_static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+{% endblock %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
@@ -9,23 +16,40 @@
 &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_label|capfirst|escape }}</a>
 &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
 &rsaquo; <a href="{% url opts|admin_urlname:'change' original.pk %}">{{ original|truncatewords:"18" }}</a>
-&rsaquo; {{ attribute_model_title }}
+&rsaquo; {{ title }}
 </div>
 {% endblock %}
 
 {% block content %}
 
-<form action="." method="POST">{% csrf_token %}
   {% csrf_token %}
 
-  {% for form in formset %}
-    <h3>{{ form.instance.attribute }}</h3>
-    {{ form.as_p }}
-  {% endfor %}
+  <div id="changelist" class="module">
+    <div id="toolbar">
+    </div>
 
-  <div class="submit-row">
-    <input type="submit" class="default" value="{% trans "Submit" %}">
+    <form action="." method="POST">{% csrf_token %}
+      <table>
+       <thead>
+         <tr>
+           <th><div class="text"><span>{% trans "Attribute" %}</span></div></th>
+           <th><div class="text"><span>{% trans "Value" %}</span></div></th>
+         </tr>
+       </thead>
+       <tbody>
+        {% for form in formset %}
+          <tr class="{% cycle "row1" "row2" %}">
+            <td>{{ form.instance.attribute }}</td>
+            <td>{{ form.as_p }}</td>
+          </tr>
+        {% endfor %}
+       </tbody>
+      </table>
+
+      <p class="paginator">
+        <input type="submit" class="default" value="{% trans "Save" %}">
+      </p>
+    </form>
   </div>
-</form>
 
 {% endblock %}

@@ -53,7 +53,7 @@ class AttributeEditMixin(object):
                     'app_label': m._meta.app_label,
                     'model': m._meta.module_name,
                     })
-            title = m._meta.verbose_name_plural
+            title = _("Edit %(name)s") % {'name': m._meta.verbose_name_plural}
             extra_context['attribute_models'].append((title, url,))
         return super(AttributeEditMixin, self).change_view(request,
                 object_id, form_url='', extra_context=extra_context)
@@ -73,6 +73,7 @@ class AttributeEditMixin(object):
         assert object_attribute_model in self.attribute_models
 
         attribute_model_class = object_attribute_model.attribute.field.rel.to
+        obj_attr_name = object_attribute_model._meta.verbose_name_plural
 
         data = request.POST if request.method == "POST" else None
 
@@ -104,7 +105,8 @@ class AttributeEditMixin(object):
                     else:
                         form.save()
 
-                message = _("Attributes have been saved.")
+                message = _("%(name)s have been saved.") % {
+                        'name': obj_attr_name}
                 messages.add_message(request, messages.INFO, message)
                 return HttpResponseRedirect(reverse('admin:%s_%s_change' % (
                     self.model._meta.app_label,
@@ -112,11 +114,12 @@ class AttributeEditMixin(object):
                     ),
                     args=(obj.id,)))
 
+        title = _("Edit %(name)s") % {'name': obj_attr_name}
         context = {
             'original': obj,
             'opts': self.model._meta,
             'attribute_model_title': object_attribute_model._meta.verbose_name_plural,
-            'title': object_attribute_model._meta.verbose_name_plural,
+            'title': title,
             'formset': formset,
             }
         return TemplateResponse(request, [self.edit_attributes_template],
