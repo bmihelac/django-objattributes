@@ -72,6 +72,17 @@ class AttributeEditMixin(object):
         """
         return attribute_model_class.objects.all()
 
+    def get_attributes_edit_success_url(self, obj, object_attribute_model):
+        """
+        Override this method to return different URL to redirect
+        user after edit_attributes is saved.
+        """
+        return reverse('admin:%s_%s_change' % (
+                    self.model._meta.app_label,
+                    self.model._meta.module_name,
+                    ),
+                    args=(obj.id,))
+
     def edit_attributes(self, request, object_id, app_label, model,
             *args, **kwargs):
         obj = self.get_object(request, object_id)
@@ -117,11 +128,9 @@ class AttributeEditMixin(object):
                 message = _("%(name)s have been saved.") % {
                         'name': obj_attr_name}
                 messages.add_message(request, messages.INFO, message)
-                return HttpResponseRedirect(reverse('admin:%s_%s_change' % (
-                    self.model._meta.app_label,
-                    self.model._meta.module_name,
-                    ),
-                    args=(obj.id,)))
+                success_url = self.get_attributes_edit_success_url(obj,
+                        object_attribute_model)
+                return HttpResponseRedirect(success_url)
 
         title = _("Edit %(name)s") % {'name': obj_attr_name}
         context = {
