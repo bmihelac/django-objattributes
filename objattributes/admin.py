@@ -59,9 +59,12 @@ class AttributeEditMixin(object):
                 object_id, form_url='', extra_context=extra_context)
 
     def get_objattributes_form_class(self, object_attribute_model, attribute):
-            return modelform_factory(object_attribute_model,
-                    form=ObjectAttributeModelForm,
-                    exclude=['content_type', 'object_id', 'attribute'])
+        """
+        Override this method to use different ModelForm class.
+        """
+        return modelform_factory(object_attribute_model,
+                form=ObjectAttributeModelForm,
+                exclude=['content_type', 'object_id', 'attribute'])
 
     def get_attributes(self, attribute_model_class, obj):
         """
