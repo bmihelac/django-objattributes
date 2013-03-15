@@ -19,7 +19,7 @@
   {% csrf_token %}
 
   {% for form in formset %}
-    <h3>{{ form.attribute }}</h3>
+    <h3>{{ form.instance.attribute }}</h3>
     {{ form.as_p }}
   {% endfor %}
 

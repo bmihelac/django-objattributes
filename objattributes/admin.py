@@ -77,7 +77,6 @@ class AttributeEditMixin(object):
             form = ObjectAttributeForm(data,
                     prefix=prefix,
                     instance=instance)
-            form.attribute = attribute
             formset.append(form)
 
         if request.method == "POST":
