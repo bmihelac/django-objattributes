@@ -63,6 +63,12 @@ class AttributeEditMixin(object):
                     form=ObjectAttributeModelForm,
                     exclude=['content_type', 'object_id', 'attribute'])
 
+    def get_attributes(self, attribute_model_class, obj):
+        """
+        Override this method to filter attributes or change order.
+        """
+        return attribute_model_class.objects.all()
+
     def edit_attributes(self, request, object_id, app_label, model,
             *args, **kwargs):
         obj = self.get_object(request, object_id)
@@ -78,7 +84,7 @@ class AttributeEditMixin(object):
         data = request.POST if request.method == "POST" else None
 
         formset = []
-        for attribute in attribute_model_class.objects.all():
+        for attribute in self.get_attributes(attribute_model_class, obj):
             prefix = attribute.pk
             instance = attribute.get_object_attribute(obj)
 
