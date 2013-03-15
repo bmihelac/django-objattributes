@@ -11,6 +11,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 
+from .forms import ObjectAttributeModelForm
+
+
 class AttributeEditMixin(object):
     """
     Attribute edit mixin.
@@ -57,6 +60,7 @@ class AttributeEditMixin(object):
 
     def get_objattributes_form_class(self, object_attribute_model, attribute):
             return modelform_factory(object_attribute_model,
+                    form=ObjectAttributeModelForm,
                     exclude=['content_type', 'object_id', 'attribute'])
 
     def edit_attributes(self, request, object_id, app_label, model,
@@ -89,11 +93,16 @@ class AttributeEditMixin(object):
         if request.method == "POST":
             is_valid = True
             for form in formset:
-                is_valid = is_valid and form.is_valid()
+                if not getattr(form, 'form_empty', False):
+                    is_valid = form.is_valid()
 
             if is_valid:
                 for form in formset:
-                    form.save()
+                    if getattr(form, 'form_empty', False):
+                        if form.instance.pk:
+                            form.instance.delete()
+                    else:
+                        form.save()
 
                 message = _("Attributes have been saved.")
                 messages.add_message(request, messages.INFO, message)

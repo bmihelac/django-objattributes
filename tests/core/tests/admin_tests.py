@@ -24,6 +24,12 @@ class AdminIntegrationTest(TestCase):
         self.tshirt = Tshirt.objects.create(name="Tshirt")
         self.attribute = Attribute.objects.create(name="Color")
 
+        self.url_edit_attributes = reverse("admin:core_tshirt_edit_attributes", kwargs={
+            'object_id': self.tshirt.pk, 
+            'app_label': 'core',
+            'model': 'objectattribute',
+            })
+
     def test_change_form(self):
         url = reverse("admin:core_tshirt_change", args=(self.tshirt.pk,))
         response = self.client.get(url)
@@ -36,20 +42,26 @@ class AdminIntegrationTest(TestCase):
                     })
 
     def test_edit_attributes(self):
-        url = reverse("admin:core_tshirt_edit_attributes", kwargs={
-            'object_id': self.tshirt.pk, 
-            'app_label': 'core',
-            'model': 'objectattribute',
-            })
-        response = self.client.get(url)
+        response = self.client.get(self.url_edit_attributes)
         self.assertEqual(response.status_code, 200)
 
         prefix = self.attribute.pk
         data = {
                 '%s-value' % prefix: "blue",
                 }
-        response = self.client.post(url, data)
+        response = self.client.post(self.url_edit_attributes, data)
         self.assertRedirects(response,
                 reverse("admin:core_tshirt_change", args=(self.tshirt.pk,)))
 
         self.assertEqual(self.attribute.get_value(self.tshirt), "blue")
+
+    def test_remove_attributes(self):
+        prefix = self.attribute.pk
+        data = {
+                '%s-value' % prefix: "",
+                }
+        response = self.client.post(self.url_edit_attributes, data)
+        self.assertRedirects(response,
+                reverse("admin:core_tshirt_change", args=(self.tshirt.pk,)))
+
+        self.assertFalse(self.attribute.get_object_attribute(self.tshirt).pk)
