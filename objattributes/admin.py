@@ -58,11 +58,11 @@ class AttributeEditMixin(object):
         return super(AttributeEditMixin, self).change_view(request,
                 object_id, form_url='', extra_context=extra_context)
 
-    def get_objattributes_form_class(self, object_attribute_model, attribute):
+    def get_objattributes_form_class(self, object_attribute):
         """
         Override this method to use different ModelForm class.
         """
-        return modelform_factory(object_attribute_model,
+        return modelform_factory(type(object_attribute),
                 form=ObjectAttributeModelForm,
                 exclude=['content_type', 'object_id', 'attribute'])
 
@@ -102,9 +102,7 @@ class AttributeEditMixin(object):
             prefix = attribute.pk
             instance = attribute.get_object_attribute(obj)
 
-            ObjectAttributeForm = self.get_objattributes_form_class(
-                    object_attribute_model,
-                    attribute)
+            ObjectAttributeForm = self.get_objattributes_form_class(instance)
 
             form = ObjectAttributeForm(data,
                     prefix=prefix,
