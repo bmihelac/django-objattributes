@@ -5,6 +5,11 @@ django-objattributes
 django-objattributes provides abstract models and admin mixins to make easier defining various attributes and storing attribute values for
 objects.
 
+.. figure:: https://raw.github.com/bmihelac/django-objattributes/master/docs/_static/objattributes-1.png
+
+   Example 1. - Test application. Each attribute can be of String, Number or Boolean type.
+   Attributes are defined in administration.
+
 Getting started
 ---------------
 
