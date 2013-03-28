@@ -36,6 +36,8 @@ Define Attribute and ObjectAttribute that will store text values::
 
 Use ``AttributeEditMixin`` to add attribute editing to administration::
 
+    from objattributes.admin import AttributeEditMixin
+
     class TshirtAdmin(AttributeEditMixin, admin.Model  Admin):
         attribute_models = [ObjectAttribute]
 
