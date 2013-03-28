@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = __import__("lists").__version__
+VERSION = __import__("objattributes").__version__
 
 CLASSIFIERS = [
     'Framework :: Django',
