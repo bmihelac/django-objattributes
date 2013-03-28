@@ -38,7 +38,7 @@ Use ``AttributeEditMixin`` to add attribute editing to administration::
 
     from objattributes.admin import AttributeEditMixin
 
-    class TshirtAdmin(AttributeEditMixin, admin.Model  Admin):
+    class TshirtAdmin(AttributeEditMixin, admin.ModelAdmin):
         attribute_models = [ObjectAttribute]
 
 For other examples check test appplication.
