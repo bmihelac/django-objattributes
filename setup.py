@@ -16,7 +16,7 @@ install_requires = [
 ]
 
 setup(
-    name="django-lists",
+    name="django-objattributes",
     description="Django objattributes",
     version=VERSION,
     author="Informatika Mihelac",
@@ -24,5 +24,6 @@ setup(
     url="https://github.com/bmihelac/django-objattributes",
     packages=find_packages(exclude=["tests"]),
     package_data={},
+    include_package_data=True,
     install_requires=install_requires,
 )
