@@ -53,7 +53,7 @@ class BaseObjectAttribute(models.Model):
     obj = generic.GenericForeignKey('content_type', 'object_id')
 
     def __unicode__(self):
-        return str(self.value)
+        return unicode(self.get_value())
 
     class Meta:
         abstract = True
