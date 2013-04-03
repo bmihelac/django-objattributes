@@ -73,7 +73,7 @@ class AdvancedObjectAttribute(BaseObjectAttribute):
         setattr(self, self.get_field_name_for_attribute(), value)
 
     def get_value(self):
-        getattr(self, self.get_field_name_for_attribute(), value)
+        getattr(self, self.get_field_name_for_attribute())
 
 
 class Book(models.Model):
