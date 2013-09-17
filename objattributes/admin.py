@@ -55,8 +55,11 @@ class AttributeEditMixin(object):
                     })
             title = _("Edit %(name)s") % {'name': m._meta.verbose_name_plural}
             extra_context['attribute_models'].append((title, url,))
-        return super(AttributeEditMixin, self).change_view(request,
-                object_id, form_url='', extra_context=extra_context)
+        return super(AttributeEditMixin, self).change_view(
+            request,
+            object_id,
+            form_url=form_url,
+            extra_context=extra_context)
 
     def get_objattributes_form_class(self, object_attribute):
         """
