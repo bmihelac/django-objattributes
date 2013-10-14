@@ -101,7 +101,8 @@ class AttributeEditMixin(object):
         data = request.POST if request.method == "POST" else None
 
         formset = []
-        for attribute in self.get_attributes(attribute_model_class, obj):
+        all_attributes = self.get_attributes(attribute_model_class, obj)
+        for attribute in all_attributes:
             prefix = attribute.pk
             instance = attribute.get_object_attribute(obj)
 
@@ -116,7 +117,7 @@ class AttributeEditMixin(object):
             is_valid = True
             for form in formset:
                 if not getattr(form, 'form_empty', False):
-                    is_valid = form.is_valid()
+                    is_valid = is_valid and form.is_valid()
 
             if is_valid:
                 for form in formset:
